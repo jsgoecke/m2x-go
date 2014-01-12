@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>m2x-go by jsgoecke</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>m2x-go</h1>
+        <p>Go library for AT&amp;T&#39;s M2X API</p>
+
+        <p class="view"><a href="https://github.com/jsgoecke/m2x-go">View the Project on GitHub <small>jsgoecke/m2x-go</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/jsgoecke/m2x-go/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jsgoecke/m2x-go/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jsgoecke/m2x-go">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="m2x" class="anchor" href="#m2x"><span class="octicon octicon-link"></span></a>m2x</h1>
+
+<p>Go library for <a href="https://m2x.att.com">AT&amp;T's M2X API</a>. AT&amp;T's M2X is a cloud-based data storage service and management toolset customized for the internet of things.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>go get github.com/jsgoecke/m2x-go
+</code></pre>
+
+<h2>
+<a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p><a href="http://godoc.org/github.com/jsgoecke/m2x-go">M2X @ Godoc.org</a></p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a name="m2x-client" class="anchor" href="#m2x-client"><span class="octicon octicon-link"></span></a>M2X Client</h3>
+
+<div class="highlight highlight-go"><pre><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">"github.com/jsgoecke/m2x-go"</span>
+    <span class="s">"log"</span>
+    <span class="s">"os"</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Create a client</span>
+    <span class="nx">client</span> <span class="o">:=</span> <span class="nx">m2x</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Getenv</span><span class="p">(</span><span class="s">"M2X_API_KEY"</span><span class="p">))</span>
+
+    <span class="c1">// Create a blueprint</span>
+    <span class="nx">blueprintData</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
+    <span class="nx">blueprintData</span><span class="p">[</span><span class="s">"name"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"Go Blueprint"</span>
+    <span class="nx">blueprintData</span><span class="p">[</span><span class="s">"description"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"A blueprint for the Go lib for M2X"</span>
+    <span class="nx">blueprintData</span><span class="p">[</span><span class="s">"visibility"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"private"</span>
+
+    <span class="nx">blueprint</span><span class="p">,</span> <span class="nx">errorMessage</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">CreateBlueprint</span><span class="p">(</span><span class="nx">blueprintData</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">errorMessage</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">errorMessage</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Update a bluprint</span>
+    <span class="nx">blueprintData</span><span class="p">[</span><span class="s">"description"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"A blueprint for the Go lib for AT&amp;T M2X"</span>
+    <span class="nx">errorMessage</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">UpdateBlueprint</span><span class="p">(</span><span class="nx">blueprint</span><span class="p">.</span><span class="nx">Id</span><span class="p">,</span> <span class="nx">blueprintData</span><span class="p">)</span>
+
+    <span class="c1">// Create a stream</span>
+    <span class="nx">streamData</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{})</span>
+    <span class="nx">unit</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
+    <span class="nx">unit</span><span class="p">[</span><span class="s">"label"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"celcius"</span>
+    <span class="nx">unit</span><span class="p">[</span><span class="s">"symbol"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"C"</span>
+    <span class="nx">streamData</span><span class="p">[</span><span class="s">"unit"</span><span class="p">]</span> <span class="p">=</span> <span class="nx">unit</span>
+    <span class="nx">errorMessage</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">UpdateFeedStream</span><span class="p">(</span><span class="nx">blueprint</span><span class="p">.</span><span class="nx">Feed</span><span class="p">,</span> <span class="s">"temperature"</span><span class="p">,</span> <span class="nx">streamData</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">errorMessage</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"Error creating stream"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">//Update location of the feed stream</span>
+    <span class="nx">loc</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{})</span>
+    <span class="nx">loc</span><span class="p">[</span><span class="s">"name"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"Storage Room in Sevilla, Spain"</span>
+    <span class="nx">loc</span><span class="p">[</span><span class="s">"latitude"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"37.383055"</span>
+    <span class="nx">loc</span><span class="p">[</span><span class="s">"longitude"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"-5.996392"</span>
+    <span class="nx">loc</span><span class="p">[</span><span class="s">"elevation"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"5"</span>
+    <span class="nx">errorMessage</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">UpdateFeedLocation</span><span class="p">(</span><span class="nx">blueprint</span><span class="p">.</span><span class="nx">Feed</span><span class="p">,</span> <span class="nx">loc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">errorMessage</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"Error updating location"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create a trigger for the feed</span>
+    <span class="nx">triggerData</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
+    <span class="nx">triggerData</span><span class="p">[</span><span class="s">"name"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"foobar"</span>
+    <span class="nx">triggerData</span><span class="p">[</span><span class="s">"stream"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"temperature"</span>
+    <span class="nx">triggerData</span><span class="p">[</span><span class="s">"condition"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"&gt;"</span>
+    <span class="nx">triggerData</span><span class="p">[</span><span class="s">"value"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"30"</span>
+    <span class="nx">triggerData</span><span class="p">[</span><span class="s">"callback_url"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"http://45bad07a.ngrok.com/streamEvent"</span>
+    <span class="nx">triggerData</span><span class="p">[</span><span class="s">"status"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"enabled"</span>
+    <span class="nx">_</span><span class="p">,</span> <span class="nx">errorMessage</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">CreateTrigger</span><span class="p">(</span><span class="nx">blueprint</span><span class="p">.</span><span class="nx">Feed</span><span class="p">,</span> <span class="nx">triggerData</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">errorMessage</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"Error creating trigger"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Update stream with data</span>
+    <span class="nx">values</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{})</span>
+    <span class="nx">values</span><span class="p">[</span><span class="s">"values"</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span><span class="o">*</span><span class="nx">m2x</span><span class="p">.</span><span class="nx">Value</span><span class="p">{</span>
+        <span class="p">{</span><span class="s">"2013-09-09T19:15:00Z"</span><span class="p">,</span> <span class="s">"32"</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"2013-09-09T19:16:00Z"</span><span class="p">,</span> <span class="s">"28 "</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"2013-09-09T19:17:00Z"</span><span class="p">,</span> <span class="s">"25"</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"2013-09-09T19:17:00Z"</span><span class="p">,</span> <span class="s">"40"</span><span class="p">},</span>
+    <span class="p">}</span>
+    <span class="nx">errorMessage</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">UpdateFeedStreamValues</span><span class="p">(</span><span class="nx">blueprint</span><span class="p">.</span><span class="nx">Feed</span><span class="p">,</span> <span class="s">"temperature"</span><span class="p">,</span> <span class="nx">values</span><span class="p">)</span>
+
+    <span class="c1">// Delete the blueprint</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">DeleteBlueprint</span><span class="p">(</span><span class="nx">blueprint</span><span class="p">.</span><span class="nx">Id</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="m2x-event-receiver" class="anchor" href="#m2x-event-receiver"><span class="octicon octicon-link"></span></a>M2X Event Receiver</h3>
+
+<div class="highlight highlight-go"><pre><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">"github.com/jsgoecke/m2x-go"</span>
+    <span class="s">"encoding/json"</span>
+    <span class="s">"github.com/codegangsta/martini"</span>
+    <span class="s">"io/ioutil"</span>
+    <span class="s">"log"</span>
+    <span class="s">"net/http"</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">m</span> <span class="o">:=</span> <span class="nx">martini</span><span class="p">.</span><span class="nx">Classic</span><span class="p">()</span>
+    <span class="nx">m</span><span class="p">.</span><span class="nx">Post</span><span class="p">(</span><span class="s">"/streamEvent"</span><span class="p">,</span> <span class="nx">streamRequestHandler</span><span class="p">)</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">ListenAndServe</span><span class="p">(</span><span class="s">":3000"</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">streamRequestHandler</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">body</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nx">ReadAll</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">Body</span><span class="p">)</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+    <span class="nx">triggerEvent</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">m2x</span><span class="p">.</span><span class="nx">ParseTriggerEvent</span><span class="p">(</span><span class="nx">body</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"Received trigger event!"</span><span class="p">)</span>
+        <span class="nx">jsonData</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">MarshalIndent</span><span class="p">(</span><span class="nx">triggerEvent</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"    "</span><span class="p">)</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">jsonData</span><span class="p">[:]))</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>Right now the tests are a combination of unit tests and functional tests. For the functional
+tests to run, you will need to set an environment variable 'M2X_API_KEY' with a valid key. Keep in mind that the tests will add and remove elements from your account, and if a tests fail may orphan
+the elements.</p>
+
+<pre><code>go test
+</code></pre>
+
+<h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>Todo</h2>
+
+<pre><code>1. Mock out net/http requests in order to move functional tests to unit tests.
+</code></pre>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT</p>
+
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<p>Jason Goecke (<a href="http://twitter.com/jsgoecke">@jsgoecke</a>)</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jsgoecke">jsgoecke</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
