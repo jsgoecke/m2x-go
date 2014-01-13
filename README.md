@@ -1,4 +1,4 @@
-# m2x
+# m2x-go
 
 Go library for [AT&T's M2X API](https://m2x.att.com). AT&T's M2X is a cloud-based data storage service and management toolset customized for the internet of things.
 
