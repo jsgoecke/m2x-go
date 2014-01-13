@@ -27,16 +27,17 @@ type Trigger struct {
 }
 
 // Represents a trigger event
-type TriggerEvent struct {
-	Id          string  `json:"feed_id"`
-	Stream      string  `json:"stream"`
-	Name        string  `json:"trigger_name"`
-	Description string  `json:"trigger_description"`
-	Condition   string  `json:"condition"`
-	Threshold   string  `json:"threshold"`
-	Value       float32 `json:"value"`
-	At          string  `json:"at"`
-}
+// Due to inconsistent types returned, using a Map (http://forum-m2x.att.com/47j-triggers-not-firing-but-work-on-test#post14953)
+// type TriggerEvent struct {
+// 	Id          string  `json:"feed_id"`
+// 	Stream      string  `json:"stream"`
+// 	Name        string  `json:"trigger_name"`
+// 	Description string  `json:"trigger_description"`
+// 	Condition   string  `json:"condition"`
+// 	Threshold   string  `json:"threshold"`
+// 	Value       float32 `json:"value"`
+// 	At          string  `json:"at"`
+// }
 
 // Creates a trigger on a feed stream
 //
@@ -178,8 +179,26 @@ func parseTrigger(data []byte) (*Trigger, error) {
 }
 
 // Parses the JSON for an event returned by a trigger
-func ParseTriggerEvent(data []byte) (*TriggerEvent, error) {
-	triggerEvent := &TriggerEvent{}
+// Due to inconsistent types returned, using a Map
+// (http://forum-m2x.att.com/47j-triggers-not-firing-but-work-on-test#post14953)
+// instead of a struct. If resolved, may change back later.
+//
+//		triggerEvent := m2x.ParseTriggerEvent(body)
+//
+// JSON POSTed:
+// 		{
+//    		"feed_id":"12345",
+//    		"stream":"call",
+//    		"trigger_name":"OffCall",
+//    		"trigger_description":"call < 1",
+//    		"condition":"<",
+//    		"threshold":"1",
+//    		"value":"0",
+//    		"at":"2014-01-13T14:35:23Z"
+// 		}
+func ParseTriggerEvent(data []byte) (map[string]interface{}, error) {
+	// triggerEvent := &TriggerEvent{}
+	triggerEvent := make(map[string]interface{})
 	err := json.Unmarshal(data, &triggerEvent)
 	if err != nil {
 		return nil, err

@@ -87,7 +87,7 @@ func TestParseTriggerEvent(t *testing.T) {
 	}`
 
 	triggerEvent, err := ParseTriggerEvent([]byte(data))
-	if err != nil || triggerEvent.Id != "a65689ce7a9a69291c6ed2deda1affad" {
+	if err != nil || triggerEvent["feed_id"] != "a65689ce7a9a69291c6ed2deda1affad" {
 		t.Errorf("Failed to parse trigger event")
 	}
 }
