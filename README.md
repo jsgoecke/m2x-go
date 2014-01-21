@@ -1,4 +1,5 @@
-# m2x-go ![Build Status](https://circleci.com/gh/jsgoecke/m2x-go.png?circle-token=20b9a08fd96fa06dad4e1432a5b47cad30fe457c)
+# m2x-go 
+[![Build Status](https://drone.io/github.com/jsgoecke/m2x-go/status.png)](https://drone.io/github.com/jsgoecke/m2x-go/latest)
 
 Go library for [AT&T's M2X API](https://m2x.att.com). AT&T's M2X is a cloud-based data storage service and management toolset customized for the internet of things.
 
