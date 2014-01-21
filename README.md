@@ -1,5 +1,5 @@
 # m2x-go 
-[![Build Status](https://drone.io/github.com/jsgoecke/m2x-go/status.png)](https://drone.io/github.com/jsgoecke/m2x-go/latest)
+[![wercker status](https://app.wercker.com/status/aa442caf92d85b9debbc71618d7b269a "wercker status")](https://app.wercker.com/project/bykey/aa442caf92d85b9debbc71618d7b269a)
 
 Go library for [AT&T's M2X API](https://m2x.att.com). AT&T's M2X is a cloud-based data storage service and management toolset customized for the internet of things.
 
