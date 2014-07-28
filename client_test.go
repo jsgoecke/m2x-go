@@ -17,8 +17,8 @@ func TestNewClient(t *testing.T) {
 
 func TestStatus(t *testing.T) {
 	client := NewClient(os.Getenv("M2X_API_KEY"))
-	result, err := client.Status()
-	if err != nil || result.Status != "OK" {
-		t.Errorf("Status did not return OK")
+	status, err := client.Status()
+	if err != nil || status.API != "OK" {
+		t.Errorf(err.Error())
 	}
 }

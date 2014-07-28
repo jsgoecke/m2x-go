@@ -22,7 +22,8 @@ type M2xClient struct {
 
 // Represents a status returned by the /status resource
 type Status struct {
-	Status string
+	API      string `json:"api"`
+	Triggers string `json:"triggers"`
 }
 
 var ApiKey string
