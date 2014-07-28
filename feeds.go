@@ -53,14 +53,14 @@ type Feed struct {
 
 // Stream represents a tream
 type Stream struct {
-	Name    string `json:"name"`
-	Value   string `json:"value"`
-	Min     int    `json:"min"`
-	Max     int    `json:"max"`
-	Unit    Unit   `json:"unit"`
-	URL     string `json:"url"`
-	Created string `json:"created"`
-	Updated string `json:"updated"`
+	Name    string      `json:"name"`
+	Value   string      `json:"value"`
+	Min     interface{} `json:"min"`
+	Max     interface{} `json:"max"`
+	Unit    Unit        `json:"unit"`
+	URL     string      `json:"url"`
+	Created string      `json:"created"`
+	Updated string      `json:"updated"`
 }
 
 // Values represents a collection of values

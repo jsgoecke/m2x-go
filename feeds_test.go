@@ -234,6 +234,7 @@ func TestFeedStream(t *testing.T) {
 		{"2013-09-09T19:16:00Z", "28 "},
 		{"2013-09-09T19:17:00Z", "25"},
 	}
+
 	errorMessage = client.UpdateFeedStreamValues(result.Feed, "temperature", values)
 	if errorMessage != nil {
 		t.Errorf("Updating the values did not work")
@@ -247,10 +248,11 @@ func TestFeedStream(t *testing.T) {
 
 	// Request the log
 	requestResult, errorMessage := client.RequestLog(result.Feed)
-	if requestResult.Requests[0].Status != 200 {
-		t.Errorf("RequestLog did not work")
+	if len(requestResult.Requests) > 0 {
+		if requestResult.Requests[0].Status != 200 {
+			t.Errorf("RequestLog did not work")
+		}
 	}
-
 	// Delete the blueprint
 	errorMessage = client.DeleteBlueprint(result.ID)
 	if errorMessage != nil {
