@@ -34,9 +34,10 @@ var APIKey string
 //
 //		client := NewClient("<API-KEY>")
 func NewClient(apiKey string) *Client {
-	m2xClient := &Client{}
-	m2xClient.APIBase = "http://api-m2x.att.com/v1"
-	m2xClient.Headers = make(map[string]string)
+	m2xClient := &Client{
+		APIBase: "http://api-m2x.att.com/v1",
+		Headers: make(map[string]string),
+	}
 	APIKey = apiKey
 	return m2xClient
 }

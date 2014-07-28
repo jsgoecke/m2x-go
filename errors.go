@@ -32,10 +32,11 @@ func generateErrorMessage(data []byte, statusCode int) *ErrorMessage {
 
 // Generates an error message without a JSON return from the API
 func simpleErrorMessage(err error, statusCode int) *ErrorMessage {
-	errorMessage := &ErrorMessage{}
-	errorMessage.Message = err.Error()
-	errorMessage.StatusCode = statusCode
-	errorMessage.Error = err
+	errorMessage := &ErrorMessage{
+		Message:    err.Error(),
+		StatusCode: statusCode,
+		Error:      err,
+	}
 	return errorMessage
 }
 
