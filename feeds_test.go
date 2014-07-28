@@ -51,7 +51,7 @@ func TestParseFeeds(t *testing.T) {
 		t.Errorf("Two feeds should have been returned")
 	}
 
-	if result.Feeds[0].Id != "65b89448f954f49e42b746d73b385cbb" || result.Feeds[1].Id != "9033bda03e2cad5cb757d024aa4a8462" {
+	if result.Feeds[0].ID != "65b89448f954f49e42b746d73b385cbb" || result.Feeds[1].ID != "9033bda03e2cad5cb757d024aa4a8462" {
 		t.Errorf("Ids did not parse properly")
 	}
 
@@ -142,7 +142,7 @@ func TestParseFeed(t *testing.T) {
 		t.Errorf("Name did not parse properly")
 	}
 
-	if feed.Triggers[0].Id != "1234" || feed.Triggers[1].Id != "1235" {
+	if feed.Triggers[0].ID != "1234" || feed.Triggers[1].ID != "1235" {
 		t.Errorf("Triggers ids did not parse properly")
 	}
 }
@@ -190,7 +190,7 @@ func TestFeedLocation(t *testing.T) {
 	}
 
 	// Delete the blueprint
-	errorMessage = client.DeleteBlueprint(result.Id)
+	errorMessage = client.DeleteBlueprint(result.ID)
 	if errorMessage != nil {
 		t.Errorf("Did not delete feed properly")
 	}
@@ -252,7 +252,7 @@ func TestFeedStream(t *testing.T) {
 	}
 
 	// Delete the blueprint
-	errorMessage = client.DeleteBlueprint(result.Id)
+	errorMessage = client.DeleteBlueprint(result.ID)
 	if errorMessage != nil {
 		t.Errorf("Did not delete feed properly")
 	}

@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 )
 
-// Represents a Keys response from the M2X API (https://m2x.att.com/developer/documentation/keys)
+// Keys represents a Keys response from the M2X API (https://m2x.att.com/developer/documentation/keys)
 type Keys struct {
 	Keys        []Key `json:"keys"`
 	Total       int   `json:"total"`
@@ -16,9 +16,9 @@ type Keys struct {
 	CurrentPage int   `json:"current_page"`
 }
 
-// Represents a single Key
+// Key represents a single Key
 type Key struct {
-	Id          string   `json:"id"`
+	ID          string   `json:"id"`
 	Name        string   `json:"name"`
 	Key         string   `json:"key"`
 	Master      bool     `json:"master"`
@@ -29,20 +29,20 @@ type Key struct {
 	Permissions []string `json:"permissions"`
 }
 
-// Creates a key
+// CreateKey creates a key
 //
 // 		keyData := make(map[string]interface{})
 // 		name := "Go Created Key"
 // 		keyData["name"] = name
 // 		keyData["permissions"] = [...]string{"GET", "PUT"}
 // 		key, err := client.CreateKey(keyData)
-func (m2xClient *M2xClient) CreateKey(key map[string]interface{}) (*Key, *ErrorMessage) {
+func (c *Client) CreateKey(key map[string]interface{}) (*Key, *ErrorMessage) {
 	data, err := json.Marshal(key)
 	if err != nil {
 		return nil, simpleErrorMessage(err, 0)
 	}
 
-	result, statusCode, postErr := post(m2xClient.ApiBase+"/keys", data)
+	result, statusCode, postErr := post(c.APIBase+"/keys", data)
 	if postErr != nil {
 		return nil, simpleErrorMessage(postErr, statusCode)
 	}
@@ -57,11 +57,11 @@ func (m2xClient *M2xClient) CreateKey(key map[string]interface{}) (*Key, *ErrorM
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Deletes a key
+// DeleteKey deletes a key
 //
 //		err := client.DeleteKey("1234")
-func (m2xClient *M2xClient) DeleteKey(id string) *ErrorMessage {
-	result, statusCode, err := delete(m2xClient.ApiBase+"/keys", id)
+func (c *Client) DeleteKey(id string) *ErrorMessage {
+	result, statusCode, err := delete(c.APIBase+"/keys", id)
 	if err != nil {
 		return simpleErrorMessage(err, statusCode)
 	}
@@ -71,11 +71,11 @@ func (m2xClient *M2xClient) DeleteKey(id string) *ErrorMessage {
 	return generateErrorMessage(result, statusCode)
 }
 
-// Gets a list of keys from the /keys resource
+// Keys gets a list of keys from the /keys resource
 //
 //		keys, err := client.Keys()
-func (m2xClient *M2xClient) Keys() (*Blueprints, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + "/keys")
+func (c *Client) Keys() (*Blueprints, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + "/keys")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -86,11 +86,11 @@ func (m2xClient *M2xClient) Keys() (*Blueprints, *ErrorMessage) {
 	return data, nil
 }
 
-// Gets a list of blueprints from the /key resource
+// Key gets a list of blueprints from the /key resource
 //
 //		key, err := client.Key()
-func (m2xClient *M2xClient) Key(id string) (*Key, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + "/keys/" + id)
+func (c *Client) Key(id string) (*Key, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + "/keys/" + id)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -104,16 +104,16 @@ func (m2xClient *M2xClient) Key(id string) (*Key, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Updates a key
+// UpdateKey updates a key
 //
 // 		keyData["name"] = "Go key"
 // 		err := client.UpdateKey("/feeds/1234", keyData)
-func (m2xClient *M2xClient) UpdateKey(id string, updateData map[string]interface{}) *ErrorMessage {
+func (c *Client) UpdateKey(id string, updateData map[string]interface{}) *ErrorMessage {
 	data, err := json.Marshal(updateData)
 	if err != nil {
 		return simpleErrorMessage(err, 0)
 	}
-	result, statusCode, postErr := put(m2xClient.ApiBase+"/keys/"+id, data)
+	result, statusCode, postErr := put(c.APIBase+"/keys/"+id, data)
 	if postErr != nil {
 		return simpleErrorMessage(postErr, statusCode)
 	}

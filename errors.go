@@ -8,6 +8,7 @@ import (
 	"errors"
 )
 
+// ErrorMessage represents an API error message
 type ErrorMessage struct {
 	Message    string `json:"message"`
 	StatusCode int
@@ -15,6 +16,7 @@ type ErrorMessage struct {
 	Error      error
 }
 
+// Error is the simple error message
 type Error struct {
 	Name []string `json:"name"`
 }

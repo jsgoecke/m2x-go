@@ -11,39 +11,41 @@ import (
 )
 
 const (
-	USERAGENT = "M2X/1 (Go net/http)"
+	// UserAgent represents the value of the HTTP user agent
+	UserAgent = "M2X/1 (Go net/http)"
 )
 
-// Represents a client for the M2X API (https://m2x.att.com/developer/documentation/overview)
-type M2xClient struct {
-	ApiBase string
+// Client represents a client for the M2X API (https://m2x.att.com/developer/documentation/overview)
+type Client struct {
+	APIBase string
 	Headers map[string]string
 }
 
-// Represents a status returned by the /status resource
+// Status represents a status returned by the /status resource
 type Status struct {
 	API      string `json:"api"`
 	Triggers string `json:"triggers"`
 }
 
-var ApiKey string
+// APIKey is the key for the API
+var APIKey string
 
-// Creates a NewClient for the M2X API
+// NewClient creates a NewClient for the M2X API
 //
 //		client := NewClient("<API-KEY>")
-func NewClient(apiKey string) *M2xClient {
-	m2xClient := &M2xClient{}
-	m2xClient.ApiBase = "http://api-m2x.att.com/v1"
+func NewClient(apiKey string) *Client {
+	m2xClient := &Client{}
+	m2xClient.APIBase = "http://api-m2x.att.com/v1"
 	m2xClient.Headers = make(map[string]string)
-	ApiKey = apiKey
+	APIKey = apiKey
 	return m2xClient
 }
 
-// Gets the status of the M2X client
+// Status gets the status of the M2X client
 //
 //		result, err := client.Status()
-func (m2xClient *M2xClient) Status() (*Status, error) {
-	result, _, err := get(m2xClient.ApiBase + "/status")
+func (c *Client) Status() (*Status, error) {
+	result, _, err := get(c.APIBase + "/status")
 	status := &Status{}
 	err = json.Unmarshal(result, &status)
 	if err != nil {
@@ -103,8 +105,8 @@ func processRequest(req *http.Request, httpClient *http.Client) ([]byte, int, er
 
 // Sets the custom headers required for the M2X API
 func setHeaders(req *http.Request) {
-	req.Header.Add("User-Agent", USERAGENT)
-	req.Header.Add("X-M2X-KEY", ApiKey)
+	req.Header.Add("User-Agent", UserAgent)
+	req.Header.Add("X-M2X-KEY", APIKey)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 }

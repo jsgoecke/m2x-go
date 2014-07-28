@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 )
 
-// Represents a collection of feeds resource (https://m2x.att.com/developer/documentation/feed)
+// Feeds represents a collection of feeds resource (https://m2x.att.com/developer/documentation/feed)
 type Feeds struct {
 	Feeds       []Feed `json:"feeds"`
 	Total       int    `json:"total"`
@@ -16,7 +16,7 @@ type Feeds struct {
 	CurrentPage int    `json:"current_page"`
 }
 
-// Represents a location
+// Location represents a location
 type Location struct {
 	Name      string     `json:"name"`
 	Latitude  string     `json:"latitude"`
@@ -25,7 +25,7 @@ type Location struct {
 	Waypoints []Waypoint `json:"waypoints"`
 }
 
-// Represents a waypoint
+// Waypoint represents a waypoint
 type Waypoint struct {
 	Timestamp string `json:"timestamp"`
 	Latitude  string `json:"latitude"`
@@ -33,16 +33,16 @@ type Waypoint struct {
 	Elevation string `json:"elevation"`
 }
 
-// Represents an individual feed
+// Feed represents an individual feed
 type Feed struct {
-	Id          string    `json:"id"`
+	ID          string    `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Visibility  string    `json:"visibility"`
 	Status      string    `json:"status"`
 	Type        string    `json:"type"`
 	Tags        []string  `json:"tags"`
-	Url         string    `json:"url"`
+	URL         string    `json:"url"`
 	Key         string    `json:"key"`
 	Created     string    `json:"created"`
 	Updated     string    `json:"updated"`
@@ -51,19 +51,19 @@ type Feed struct {
 	Triggers    []Trigger `json:"triggers"`
 }
 
-// Represents a tream
+// Stream represents a tream
 type Stream struct {
 	Name    string `json:"name"`
 	Value   string `json:"value"`
 	Min     int    `json:"min"`
 	Max     int    `json:"max"`
 	Unit    Unit   `json:"unit"`
-	Url     string `json:"url"`
+	URL     string `json:"url"`
 	Created string `json:"created"`
 	Updated string `json:"updated"`
 }
 
-// Represents a collection of values
+// Values represents a collection of values
 type Values struct {
 	Start  string `json:"start"`
 	End    string `json:"end"`
@@ -71,24 +71,24 @@ type Values struct {
 	Values []Value
 }
 
-// Represents a value
+// Value represents a value
 type Value struct {
 	At    string `json:"at"`
 	Value string `json:"value"`
 }
 
-// Represents a request
+// Unit represents a request
 type Unit struct {
 	Label  string `json:"label"`
 	Symbol string `json:"symbol"`
 }
 
-// Represents a collection of request
+// Requests represents a collection of request
 type Requests struct {
 	Requests []Request
 }
 
-// Represents a request
+// Request represents a request
 type Request struct {
 	At     string `json:"at"`
 	Status int    `json:"status"`
@@ -96,11 +96,11 @@ type Request struct {
 	Path   string `json:"path"`
 }
 
-// Gets a list of feeds
+// Feeds gets a list of feeds
 //
 //		feeds, err := client.Feeds()
-func (m2xClient *M2xClient) Feeds() (*Feeds, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + "/feeds")
+func (c *Client) Feeds() (*Feeds, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + "/feeds")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -114,11 +114,11 @@ func (m2xClient *M2xClient) Feeds() (*Feeds, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Gets a feed
+// Feed gets a feed
 //
 //		feed, err := client.Feed("/feeds/1234")
-func (m2xClient *M2xClient) Feed(resource string) (*Feed, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + resource)
+func (c *Client) Feed(resource string) (*Feed, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + resource)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -129,11 +129,11 @@ func (m2xClient *M2xClient) Feed(resource string) (*Feed, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Gets a feed location
+// FeedLocation gets a feed location
 //
 //		feed, err := client.FeedLocation("/feeds/1234")
-func (m2xClient *M2xClient) FeedLocation(resource string) (*Location, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + resource + "/location")
+func (c *Client) FeedLocation(resource string) (*Location, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + resource + "/location")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -142,14 +142,13 @@ func (m2xClient *M2xClient) FeedLocation(resource string) (*Location, *ErrorMess
 		err := json.Unmarshal(result, &location)
 		if err != nil {
 			return nil, simpleErrorMessage(err, statusCode)
-		} else {
-			return location, nil
 		}
+		return location, nil
 	}
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Create/Update a feed location
+// UpdateFeedLocation create/Update a feed location
 //
 // 		loc := make(map[string]interface{})
 // 		loc["name"] = "Storage Room in Sevilla, Spain"
@@ -157,12 +156,12 @@ func (m2xClient *M2xClient) FeedLocation(resource string) (*Location, *ErrorMess
 // 		loc["longitude"] = "-5.996392"
 // 		loc["elevation"] = "5"
 // 		err := client.UpdateFeedLocation("/feeds/1234", loc)
-func (m2xClient *M2xClient) UpdateFeedLocation(resource string, updateData map[string]interface{}) *ErrorMessage {
+func (c *Client) UpdateFeedLocation(resource string, updateData map[string]interface{}) *ErrorMessage {
 	data, err := json.Marshal(updateData)
 	if err != nil {
 		return simpleErrorMessage(err, 0)
 	}
-	result, statusCode, putErr := put(m2xClient.ApiBase+resource+"/location", data)
+	result, statusCode, putErr := put(c.APIBase+resource+"/location", data)
 	if putErr != nil {
 		return simpleErrorMessage(putErr, statusCode)
 	}
@@ -173,11 +172,11 @@ func (m2xClient *M2xClient) UpdateFeedLocation(resource string, updateData map[s
 	return generateErrorMessage(result, statusCode)
 }
 
-// List a feed stream
+// FeedStream list a feed stream
 //
 //		stream, err := client.FeedStream("/feeds/1234", "temperature")
-func (m2xClient *M2xClient) FeedStream(resource string, name string) (*Stream, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + resource + "/streams/" + name)
+func (c *Client) FeedStream(resource string, name string) (*Stream, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + resource + "/streams/" + name)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -191,7 +190,7 @@ func (m2xClient *M2xClient) FeedStream(resource string, name string) (*Stream, *
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Update a feed stream
+// UpdateFeedStream update a feed stream
 //
 // 		streamData := make(map[string]interface{})
 // 		unit := make(map[string]string)
@@ -199,12 +198,12 @@ func (m2xClient *M2xClient) FeedStream(resource string, name string) (*Stream, *
 // 		unit["symbol"] = "C"
 // 		streamData["unit"] = unit
 // 		err := client.UpdateFeedStream("/feeds/1234", "temperature", streamData)
-func (m2xClient *M2xClient) UpdateFeedStream(resource string, name string, updateData map[string]interface{}) *ErrorMessage {
+func (c *Client) UpdateFeedStream(resource string, name string, updateData map[string]interface{}) *ErrorMessage {
 	data, err := json.Marshal(updateData)
 	if err != nil {
 		return simpleErrorMessage(err, 0)
 	}
-	result, statusCode, putErr := put(m2xClient.ApiBase+resource+"/streams/"+name, data)
+	result, statusCode, putErr := put(c.APIBase+resource+"/streams/"+name, data)
 	if putErr != nil {
 		return simpleErrorMessage(putErr, 0)
 	}
@@ -215,11 +214,11 @@ func (m2xClient *M2xClient) UpdateFeedStream(resource string, name string, updat
 	return generateErrorMessage(result, statusCode)
 }
 
-// List the feeds stream values
+// FeedStreamValues list the feeds stream values
 //
 //		values, err := client.FeedStreamValues("/feeds/1234", "temperature")
-func (m2xClient *M2xClient) FeedStreamValues(resource string, name string) (*Values, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + resource + "/streams/" + name + "/values")
+func (c *Client) FeedStreamValues(resource string, name string) (*Values, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + resource + "/streams/" + name + "/values")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -233,7 +232,7 @@ func (m2xClient *M2xClient) FeedStreamValues(resource string, name string) (*Val
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Update feeds stream values
+// UpdateFeedStreamValues update feeds stream values
 //
 // 		values := make(map[string]interface{})
 // 		values["values"] = []*m2x.Value{
@@ -243,12 +242,12 @@ func (m2xClient *M2xClient) FeedStreamValues(resource string, name string) (*Val
 // 			{"2013-09-09T19:17:00Z", "40"},
 // 		}
 // 		err := client.UpdateFeedStreamValues("/feeds/1234", "temperature", values)
-func (m2xClient *M2xClient) UpdateFeedStreamValues(resource string, name string, updateData map[string]interface{}) *ErrorMessage {
+func (c *Client) UpdateFeedStreamValues(resource string, name string, updateData map[string]interface{}) *ErrorMessage {
 	data, err := json.Marshal(updateData)
 	if err != nil {
 		return simpleErrorMessage(err, 0)
 	}
-	result, statusCode, putErr := post(m2xClient.ApiBase+resource+"/streams/"+name+"/values", data)
+	result, statusCode, putErr := post(c.APIBase+resource+"/streams/"+name+"/values", data)
 	if putErr != nil {
 		return simpleErrorMessage(putErr, statusCode)
 	}
@@ -259,11 +258,11 @@ func (m2xClient *M2xClient) UpdateFeedStreamValues(resource string, name string,
 	return generateErrorMessage(result, statusCode)
 }
 
-// Request a log
+// RequestLog requests a log
 //
 //		requests, err := RequestLog("/feeds/1234")
-func (m2xClient *M2xClient) RequestLog(resource string) (*Requests, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + resource + "/log")
+func (c *Client) RequestLog(resource string) (*Requests, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + resource + "/log")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}

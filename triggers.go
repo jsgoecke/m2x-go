@@ -7,20 +7,20 @@ import (
 	"encoding/json"
 )
 
-// Represents a collection of triggers (https://m2x.att.com/developer/documentation/feed#List-Triggers)
+// Triggers represents a collection of triggers (https://m2x.att.com/developer/documentation/feed#List-Triggers)
 type Triggers struct {
 	Triggers []Trigger
 }
 
-// Represents a trigger
+// Trigger represents a trigger
 type Trigger struct {
-	Id          string `json:"id"`
+	ID          string `json:"id"`
 	Name        string `json:"name"`
 	Stream      string `json:"stream"`
 	Condition   string `json:"condition"`
 	Value       string `json:"value"`
-	CallbackUrl string `json:"callback_url"`
-	Url         string `json:"url"`
+	CallbackURL string `json:"callback_url"`
+	URL         string `json:"url"`
 	Status      string `json:"status"`
 	Created     string `json:"created"`
 	Updated     string `json:"updated"`
@@ -39,7 +39,7 @@ type Trigger struct {
 // 	At          string  `json:"at"`
 // }
 
-// Creates a trigger on a feed stream
+// CreateTrigger creates a trigger on a feed stream
 //
 // 		triggerData := make(map[string]string)
 // 		triggerData["name"] = "foobar"
@@ -49,13 +49,13 @@ type Trigger struct {
 // 		triggerData["callback_url"] = "http://45bad07a.ngrok.com/streamEvent"
 // 		triggerData["status"] = "enabled"
 // 		trigger, err := client.CreateTrigger(blueprint.Feed, triggerData)
-func (m2xClient *M2xClient) CreateTrigger(resource string, trigger map[string]string) (*Trigger, *ErrorMessage) {
+func (c *Client) CreateTrigger(resource string, trigger map[string]string) (*Trigger, *ErrorMessage) {
 	data, err := json.Marshal(trigger)
 	if err != nil {
 		return nil, simpleErrorMessage(err, 0)
 	}
 
-	result, statusCode, postErr := post(m2xClient.ApiBase+resource+"/triggers", data)
+	result, statusCode, postErr := post(c.APIBase+resource+"/triggers", data)
 	if postErr != nil {
 		return nil, simpleErrorMessage(postErr, statusCode)
 	}
@@ -71,11 +71,11 @@ func (m2xClient *M2xClient) CreateTrigger(resource string, trigger map[string]st
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Deletes a trigger from a feed stream
+// DeleteTrigger deletes a trigger from a feed stream
 //
 //		err := client.DeleteTrigger("/feeds/1234", "1235")
-func (m2xClient *M2xClient) DeleteTrigger(resource string, id string) *ErrorMessage {
-	result, statusCode, err := delete(m2xClient.ApiBase+resource+"/triggers/", id)
+func (c *Client) DeleteTrigger(resource string, id string) *ErrorMessage {
+	result, statusCode, err := delete(c.APIBase+resource+"/triggers/", id)
 	if err != nil {
 		return simpleErrorMessage(err, statusCode)
 	}
@@ -85,11 +85,11 @@ func (m2xClient *M2xClient) DeleteTrigger(resource string, id string) *ErrorMess
 	return generateErrorMessage(result, statusCode)
 }
 
-// Lists a collection of triggers on a feed stream
+// Triggers lists a collection of triggers on a feed stream
 //
 //		triggers, err := client.Triggers()
-func (m2xClient *M2xClient) Triggers(resource string) (*Triggers, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + resource + "/triggers")
+func (c *Client) Triggers(resource string) (*Triggers, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + resource + "/triggers")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -103,11 +103,11 @@ func (m2xClient *M2xClient) Triggers(resource string) (*Triggers, *ErrorMessage)
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Lists a trigger on a feed stream
+// Trigger lists a trigger on a feed stream
 //
 //		trigger, err := client.Trigger("/feeds/1234", "1235")
-func (m2xClient *M2xClient) Trigger(resource string, id string) (*Trigger, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + resource + "/triggers/" + id)
+func (c *Client) Trigger(resource string, id string) (*Trigger, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + resource + "/triggers/" + id)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -121,17 +121,17 @@ func (m2xClient *M2xClient) Trigger(resource string, id string) (*Trigger, *Erro
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Updates a trigger on a feed stream
+// UpdateTrigger updates a trigger on a feed stream
 //
 // 		triggerData["callback_url"] = "http://host.com/streamEvent"
 // 		triggerData["status"] = "disabled"
 // 		err := client.UpdateTrigger("/feeds/1234", "1235", triggerData)
-func (m2xClient *M2xClient) UpdateTrigger(resource string, id string, updateData map[string]string) *ErrorMessage {
+func (c *Client) UpdateTrigger(resource string, id string, updateData map[string]string) *ErrorMessage {
 	data, err := json.Marshal(updateData)
 	if err != nil {
 		return simpleErrorMessage(err, 0)
 	}
-	result, statusCode, postErr := put(m2xClient.ApiBase+resource+"/triggers/"+id, data)
+	result, statusCode, postErr := put(c.APIBase+resource+"/triggers/"+id, data)
 	if postErr != nil {
 		return simpleErrorMessage(postErr, statusCode)
 	}
@@ -142,12 +142,12 @@ func (m2xClient *M2xClient) UpdateTrigger(resource string, id string, updateData
 	return generateErrorMessage(result, statusCode)
 }
 
-// Tests a trigger
+// TestTrigger tests a trigger
 //
 //	err := client.TestTrigger("/feeds/1234", "foobar")
-func (m2xClient *M2xClient) TestTrigger(resource string, name string) *ErrorMessage {
+func (c *Client) TestTrigger(resource string, name string) *ErrorMessage {
 	var empty []byte
-	result, statusCode, postErr := post(m2xClient.ApiBase+resource+"/triggers/"+name+"/test", empty)
+	result, statusCode, postErr := post(c.APIBase+resource+"/triggers/"+name+"/test", empty)
 	if postErr != nil {
 		return simpleErrorMessage(postErr, statusCode)
 	}
@@ -178,7 +178,7 @@ func parseTrigger(data []byte) (*Trigger, error) {
 	return trigger, nil
 }
 
-// Parses the JSON for an event returned by a trigger
+// ParseTriggerEvent parses the JSON for an event returned by a trigger
 // Due to inconsistent types returned, using a Map
 // (http://forum-m2x.att.com/47j-triggers-not-firing-but-work-on-test#post14953)
 // instead of a struct. If resolved, may change back later.

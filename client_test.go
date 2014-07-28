@@ -10,7 +10,7 @@ import (
 
 func TestNewClient(t *testing.T) {
 	client := NewClient(os.Getenv("M2X_API_KEY"))
-	if client.ApiBase != "http://api-m2x.att.com/v1" {
+	if client.APIBase != "http://api-m2x.att.com/v1" {
 		t.Errorf("ApiBase was not set properly")
 	}
 }

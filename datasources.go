@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 )
 
-// Represents a collection of blueprints (https://m2x.att.com/developer/documentation/datasource)
+// Blueprints represents a collection of blueprints (https://m2x.att.com/developer/documentation/datasource)
 type Blueprints struct {
 	Blueprints  []Blueprint `json:"blueprints"`
 	Total       int         `json:"total"`
@@ -16,16 +16,16 @@ type Blueprints struct {
 	CurrentPage int         `json:"current_page"`
 }
 
-// Represents a single blueprint
+// Blueprint represents a single blueprint
 type Blueprint struct {
-	Id          string     `json:"id"`
+	ID          string     `json:"id"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
 	Visibility  string     `json:"visibility"`
 	Serial      string     `json:"serial"`
 	Status      string     `json:"status"`
 	Feed        string     `json:"feed"`
-	Url         string     `json:"url"`
+	URL         string     `json:"url"`
 	Key         string     `json:"key"`
 	Tags        []string   `json:"tags"`
 	Created     string     `json:"created"`
@@ -33,7 +33,7 @@ type Blueprint struct {
 	Datasources Datasource `json:"datasources"`
 }
 
-// Represents a collection of batches
+// Batches represents a collection of batches
 type Batches struct {
 	Batches     []Batch `json:"batches"`
 	Total       int     `json:"total"`
@@ -42,16 +42,16 @@ type Batches struct {
 	CurrentPage int     `json:"current_page"`
 }
 
-// Represents a single batch
+// Batch represents a single batch
 type Batch struct {
-	Id          string     `json:"id"`
+	ID          string     `json:"id"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
 	Visibility  string     `json:"visibility"`
 	Serial      string     `json:"serial"`
 	Status      string     `json:"status"`
 	Feed        string     `json:"feed"`
-	Url         string     `json:"url"`
+	URL         string     `json:"url"`
 	Key         string     `json:"key"`
 	Tags        []string   `json:"tags"`
 	Created     string     `json:"created"`
@@ -59,24 +59,24 @@ type Batch struct {
 	Datasources Datasource `json:"datasources"`
 }
 
-// Represents a single datasource
+// Datasource represents a single datasource
 type Datasource struct {
 	Total        int `json:"total"`
 	Registered   int `json:"registered"`
 	Unregistered int `json:"unregistered"`
 }
 
-// Creates a new blueprint
+// CreateBlueprint creates a new blueprint
 //
 //		blueprintData := make(map[string]string)
 // 		blueprintData["name"] = "Go Blueprint"
 // 		blueprintData["description"] = "A blueprint for the Go lib for M2X"
 // 		blueprintData["visibility"] = "private"
 // 		blueprint, err := client.CreateBlueprint(blueprintData)
-func (m2xClient *M2xClient) CreateBlueprint(blueprint map[string]string) (*Blueprint, *ErrorMessage) {
+func (c *Client) CreateBlueprint(blueprint map[string]string) (*Blueprint, *ErrorMessage) {
 	data, err := json.Marshal(blueprint)
 
-	result, statusCode, err := post(m2xClient.ApiBase+"/blueprints", data)
+	result, statusCode, err := post(c.APIBase+"/blueprints", data)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -92,11 +92,11 @@ func (m2xClient *M2xClient) CreateBlueprint(blueprint map[string]string) (*Bluep
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Deletes a blueprint
+// DeleteBlueprint deletes a blueprint
 //
-//		err := client.DeleteBlueprint(blueprint.Id)
-func (m2xClient *M2xClient) DeleteBlueprint(id string) *ErrorMessage {
-	result, statusCode, err := delete(m2xClient.ApiBase+"/blueprints", id)
+//		err := client.DeleteBlueprint(blueprint.ID)
+func (c *Client) DeleteBlueprint(id string) *ErrorMessage {
+	result, statusCode, err := delete(c.APIBase+"/blueprints", id)
 	if err != nil {
 		return simpleErrorMessage(err, statusCode)
 	}
@@ -106,11 +106,11 @@ func (m2xClient *M2xClient) DeleteBlueprint(id string) *ErrorMessage {
 	return generateErrorMessage(result, statusCode)
 }
 
-// Gets a list of blueprints
+// Blueprints gets a list of blueprints
 //
 //		blueprints, err := client.Blueprints()
-func (m2xClient *M2xClient) Blueprints() (*Blueprints, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + "/blueprints")
+func (c *Client) Blueprints() (*Blueprints, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + "/blueprints")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -124,11 +124,11 @@ func (m2xClient *M2xClient) Blueprints() (*Blueprints, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Gets a blueprint
+// Blueprint gets a blueprint
 //
 //		blueprint, err := client.Blueprint("1234")
-func (m2xClient *M2xClient) Blueprint(id string) (*Blueprint, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + "/blueprints/" + id)
+func (c *Client) Blueprint(id string) (*Blueprint, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + "/blueprints/" + id)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -142,16 +142,16 @@ func (m2xClient *M2xClient) Blueprint(id string) (*Blueprint, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Updates a blueprint
+// UpdateBlueprint updates a blueprint
 //
 //		blueprintData["description"] = "A blueprint for the Go lib for AT&T M2X"
-//		err := client.UpdateBlueprint(blueprint.Id, blueprintData)
-func (m2xClient *M2xClient) UpdateBlueprint(id string, updateData map[string]string) *ErrorMessage {
+//		err := client.UpdateBlueprint(blueprint.ID, blueprintData)
+func (c *Client) UpdateBlueprint(id string, updateData map[string]string) *ErrorMessage {
 	data, err := json.Marshal(updateData)
 	if err != nil {
 		return simpleErrorMessage(err, 0)
 	}
-	result, statusCode, postErr := put(m2xClient.ApiBase+"/blueprints/"+id, data)
+	result, statusCode, postErr := put(c.APIBase+"/blueprints/"+id, data)
 	if postErr != nil {
 		return simpleErrorMessage(err, statusCode)
 	}
@@ -162,20 +162,20 @@ func (m2xClient *M2xClient) UpdateBlueprint(id string, updateData map[string]str
 	return generateErrorMessage(result, statusCode)
 }
 
-// Creates a new batch
+// CreateBatch creates a new batch
 //
 //		batchData := make(map[string]string)
 // 		batchData["name"] = "Go Batch"
 // 		batchData["description"] = "A batch for the Go lib for M2X"
 // 		batchData["visibility"] = "private"
 // 		batch, err := client.CreateBatch(batch)
-func (m2xClient *M2xClient) CreateBatch(batch map[string]string) (*Batch, *ErrorMessage) {
+func (c *Client) CreateBatch(batch map[string]string) (*Batch, *ErrorMessage) {
 	data, err := json.Marshal(batch)
 	if err != nil {
 		return nil, simpleErrorMessage(err, 0)
 	}
 
-	result, statusCode, err := post(m2xClient.ApiBase+"/batches", data)
+	result, statusCode, err := post(c.APIBase+"/batches", data)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -191,11 +191,11 @@ func (m2xClient *M2xClient) CreateBatch(batch map[string]string) (*Batch, *Error
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Deletes a batch
+// DeleteBatch deletes a batch
 //
-//		err := client.DeleteBatch(batch.Id)
-func (m2xClient *M2xClient) DeleteBatch(id string) (*Batch, *ErrorMessage) {
-	result, statusCode, err := delete(m2xClient.ApiBase+"/batches", id)
+//		err := client.DeleteBatch(batch.ID)
+func (c *Client) DeleteBatch(id string) (*Batch, *ErrorMessage) {
+	result, statusCode, err := delete(c.APIBase+"/batches", id)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -205,11 +205,11 @@ func (m2xClient *M2xClient) DeleteBatch(id string) (*Batch, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Gets a list of batches
+// Batches gets a list of batches
 //
 //		batches, err := client.Batches()
-func (m2xClient *M2xClient) Batches() (*Batches, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + "/batches")
+func (c *Client) Batches() (*Batches, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + "/batches")
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -223,11 +223,11 @@ func (m2xClient *M2xClient) Batches() (*Batches, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Gets a batch
+// Batch gets a batch
 //
 //		batch, err := client.Batch("1234")
-func (m2xClient *M2xClient) Batch(id string) (*Batch, *ErrorMessage) {
-	result, statusCode, err := get(m2xClient.ApiBase + "/batches/" + id)
+func (c *Client) Batch(id string) (*Batch, *ErrorMessage) {
+	result, statusCode, err := get(c.APIBase + "/batches/" + id)
 	if err != nil {
 		return nil, simpleErrorMessage(err, statusCode)
 	}
@@ -241,16 +241,16 @@ func (m2xClient *M2xClient) Batch(id string) (*Batch, *ErrorMessage) {
 	return nil, generateErrorMessage(result, statusCode)
 }
 
-// Updates a batch
+// UpdateBatch updates a batch
 //
 //		batchData["description"] = "A batch for the Go lib for AT&T M2X"
-//		err := client.UpdateBatch(batch.Id, batchData)
-func (m2xClient *M2xClient) UpdateBatch(id string, updateData map[string]string) *ErrorMessage {
+//		err := client.UpdateBatch(batch.ID, batchData)
+func (c *Client) UpdateBatch(id string, updateData map[string]string) *ErrorMessage {
 	data, err := json.Marshal(updateData)
 	if err != nil {
 		return simpleErrorMessage(err, 0)
 	}
-	result, statusCode, postErr := put(m2xClient.ApiBase+"/batches/"+id, data)
+	result, statusCode, postErr := put(c.APIBase+"/batches/"+id, data)
 	if postErr != nil {
 		return simpleErrorMessage(postErr, statusCode)
 	}

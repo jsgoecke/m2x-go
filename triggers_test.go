@@ -40,7 +40,7 @@ func TestParseTriggers(t *testing.T) {
 		t.Errorf("Names did not parse properly")
 	}
 
-	if result.Triggers[0].Id != "1234" || result.Triggers[1].Id != "1235" {
+	if result.Triggers[0].ID != "1234" || result.Triggers[1].ID != "1235" {
 		t.Errorf("Keys did not parse properly")
 	}
 }
@@ -60,7 +60,7 @@ func TestParseTrigger(t *testing.T) {
 
 	feed, _ := parseTrigger([]byte(data))
 
-	if feed.Id != "1234" {
+	if feed.ID != "1234" {
 		t.Errorf("Id did not parse properly")
 	}
 
@@ -140,24 +140,24 @@ func TestCreateAndListAndUpdateAndDeleteTrigger(t *testing.T) {
 	triggerData["value"] = "25"
 	triggerData["callback_url"] = "http://barfoo.com"
 	triggerData["status"] = "disabled"
-	err = client.UpdateTrigger(blueprint.Feed, trigger.Id, triggerData)
-	trigger, err = client.Trigger(blueprint.Feed, trigger.Id)
-	if trigger.Name != "barfoo" || trigger.CallbackUrl != "http://barfoo.com" {
+	err = client.UpdateTrigger(blueprint.Feed, trigger.ID, triggerData)
+	trigger, err = client.Trigger(blueprint.Feed, trigger.ID)
+	if trigger.Name != "barfoo" || trigger.CallbackURL != "http://barfoo.com" {
 		t.Errorf("Did not update a trigger properly")
 	}
 
-	err = client.TestTrigger(blueprint.Feed, trigger.Id)
+	err = client.TestTrigger(blueprint.Feed, trigger.ID)
 	if err != nil {
 		t.Errorf("Did not test trigger properly")
 	}
 
-	err = client.DeleteTrigger(blueprint.Feed, trigger.Id)
+	err = client.DeleteTrigger(blueprint.Feed, trigger.ID)
 	if err != nil {
 		t.Errorf("Did not delete trigger properly")
 	}
 
 	// Delete the blueprint
-	err = client.DeleteBlueprint(blueprint.Id)
+	err = client.DeleteBlueprint(blueprint.ID)
 	if err != nil {
 		t.Errorf("Did not delete blueprint properly")
 	}

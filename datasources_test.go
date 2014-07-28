@@ -64,7 +64,7 @@ func TestParseBlueprint(t *testing.T) {
       "updated": "2013-09-02T10:00:00Z" }`
 
 	blueprint, _ := parseBlueprint([]byte(data))
-	if blueprint.Id != "3281fe1067ce3d7ae276ad360066e7be" {
+	if blueprint.ID != "3281fe1067ce3d7ae276ad360066e7be" {
 		t.Errorf("Id did not parse properly")
 	}
 }
@@ -115,7 +115,7 @@ func TestParseBatches(t *testing.T) {
 		t.Errorf("Names did not parse properly")
 	}
 
-	if result.Batches[0].Id != "1b3ba972fcf92a156fc8c0ca1554434c" || result.Batches[1].Id != "4fc642808294b2f8af137bb655fa0e18" {
+	if result.Batches[0].ID != "1b3ba972fcf92a156fc8c0ca1554434c" || result.Batches[1].ID != "4fc642808294b2f8af137bb655fa0e18" {
 		t.Errorf("Names did not parse properly")
 	}
 }
@@ -142,7 +142,7 @@ func TestParseBatch(t *testing.T) {
   } }`
 
 	batch, _ := parseBatch([]byte(data))
-	if batch.Id != "1b3ba972fcf92a156fc8c0ca1554434c" {
+	if batch.ID != "1b3ba972fcf92a156fc8c0ca1554434c" {
 		t.Errorf("Id did not parse properly")
 	}
 
@@ -175,7 +175,7 @@ func TestCreateAndListAndUpdateAndDeleteBlueprint(t *testing.T) {
 	}
 
 	// List the blueprint
-	blueprint, err = client.Blueprint(blueprint.Id)
+	blueprint, err = client.Blueprint(blueprint.ID)
 	if err != nil || blueprint.Description != "Unit testing Go lib for M2X" {
 		t.Errorf("Did not fetch blueprint properly")
 	}
@@ -184,17 +184,17 @@ func TestCreateAndListAndUpdateAndDeleteBlueprint(t *testing.T) {
 	blueprintData["name"] = name
 	blueprintData["description"] = "Updated description!"
 	blueprintData["visibility"] = "private"
-	err = client.UpdateBlueprint(blueprint.Id, blueprintData)
+	err = client.UpdateBlueprint(blueprint.ID, blueprintData)
 	if err != nil {
 		t.Errorf("Updating blueprint did not work")
 	}
-	blueprint, err = client.Blueprint(blueprint.Id)
+	blueprint, err = client.Blueprint(blueprint.ID)
 	if err != nil || blueprint.Description != "Updated description!" {
 		t.Errorf("Did not fetch blueprint properly")
 	}
 
 	// Delete the blueprint
-	err = client.DeleteBlueprint(blueprint.Id)
+	err = client.DeleteBlueprint(blueprint.ID)
 	if err != nil {
 		t.Errorf("Did not delete blueprint properly")
 	}
@@ -224,7 +224,7 @@ func TestCreateAndListAndUpdateAndDeleteBatch(t *testing.T) {
 	}
 
 	// List the batch
-	batch, err = client.Batch(batch.Id)
+	batch, err = client.Batch(batch.ID)
 	if batch.Description != "Unit testing Go lib for M2X" {
 		t.Errorf("Did not fetch batch properly")
 	}
@@ -233,17 +233,17 @@ func TestCreateAndListAndUpdateAndDeleteBatch(t *testing.T) {
 	batchData["name"] = name
 	batchData["description"] = "Updated description!"
 	batchData["visibility"] = "private"
-	err = client.UpdateBatch(batch.Id, batchData)
+	err = client.UpdateBatch(batch.ID, batchData)
 	if err != nil {
 		t.Errorf("Did not update batch properly")
 	}
-	batch, err = client.Batch(batch.Id)
+	batch, err = client.Batch(batch.ID)
 	if err != nil || batch.Description != "Updated description!" {
 		t.Errorf("Did not fetch batch properly")
 	}
 
 	// Delete the batch
-	batch, err = client.DeleteBatch(batch.Id)
+	batch, err = client.DeleteBatch(batch.ID)
 	if batch != nil || err != nil {
 		t.Errorf("Did not delete batch properly")
 	}
