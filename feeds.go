@@ -55,8 +55,8 @@ type Feed struct {
 type Stream struct {
 	Name    string `json:"name"`
 	Value   string `json:"value"`
-	Min     string `json:"min"`
-	Max     string `json:"max"`
+	Min     int    `json:"min"`
+	Max     int    `json:"max"`
 	Unit    Unit   `json:"unit"`
 	Url     string `json:"url"`
 	Created string `json:"created"`
