@@ -13,6 +13,8 @@ import (
 const (
 	// UserAgent represents the value of the HTTP user agent
 	UserAgent = "M2X/1 (Go net/http)"
+	// Version of the library
+	Version = "0.3"
 )
 
 // Client represents a client for the M2X API (https://m2x.att.com/developer/documentation/overview)

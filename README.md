@@ -5,7 +5,7 @@ Go library for [AT&T's M2X API](https://m2x.att.com). AT&T's M2X is a cloud-base
 
 ## Version
 
-0.2
+0.3
 
 ## Installation
 
