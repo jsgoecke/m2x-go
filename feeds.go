@@ -166,7 +166,7 @@ func (c *Client) UpdateFeedLocation(resource string, updateData map[string]inter
 		return simpleErrorMessage(putErr, statusCode)
 	}
 
-	if statusCode == 204 {
+	if statusCode == 204 || statusCode == 202 {
 		return nil
 	}
 	return generateErrorMessage(result, statusCode)
@@ -251,8 +251,7 @@ func (c *Client) UpdateFeedStreamValues(resource string, name string, updateData
 	if putErr != nil {
 		return simpleErrorMessage(putErr, statusCode)
 	}
-
-	if statusCode == 204 {
+	if statusCode == 204 || statusCode == 202 {
 		return nil
 	}
 	return generateErrorMessage(result, statusCode)

@@ -4,7 +4,6 @@
 package m2x
 
 import (
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -151,6 +150,9 @@ func TestParseFeed(t *testing.T) {
 func TestListFeeds(t *testing.T) {
 	client := NewClient(os.Getenv("M2X_API_KEY"))
 	result, err := client.Feeds()
+	if err != nil {
+		t.Errorf("Listing the feeds did not work properly")
+	}
 	if result.CurrentPage != 1 {
 		t.Errorf("Listing the feeds did not work properly")
 	}
@@ -186,7 +188,6 @@ func TestFeedLocation(t *testing.T) {
 	loc["longitude"] = "-57.5478776916862"
 	loc["elevation"] = "5"
 	errorMessage := client.UpdateFeedLocation(result.Feed, loc)
-	fmt.Println(errorMessage)
 	if errorMessage != nil {
 		t.Errorf("Did not update the location properly")
 	}
@@ -243,8 +244,11 @@ func TestFeedStream(t *testing.T) {
 	}
 
 	// List the values of a stream
-	streamValues, _ := client.FeedStreamValues(result.Feed, "temperature")
-	if streamValues.Limit != 100 || streamValues.Values[0].Value != "25" {
+	streamValues, err := client.FeedStreamValues(result.Feed, "temperature")
+	if err != nil {
+		t.Errorf("Listing the values did not work")
+	}
+	if streamValues.Limit != 100 {
 		t.Errorf("Listing the values did not work")
 	}
 

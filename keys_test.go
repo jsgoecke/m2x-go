@@ -111,8 +111,12 @@ func TestCreateAndListAndUpdateAndDeleteKey(t *testing.T) {
 
 	// List the key
 	result, errorMessage = client.Key(id)
-	if result.Name != name {
-		t.Errorf("Did not fetch key properly")
+	if result != nil {
+		if result.Name != name {
+			t.Errorf("Did not fetch key properly")
+		}
+	} else {
+		t.Error("Did not fetch key properly")
 	}
 
 	// Update a key
