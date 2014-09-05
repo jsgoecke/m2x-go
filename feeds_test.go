@@ -149,7 +149,7 @@ func TestParseFeed(t *testing.T) {
 
 func TestListFeeds(t *testing.T) {
 	client := NewClient(os.Getenv("M2X_API_KEY"))
-	result, _ := client.Feeds()
+	result, err := client.Feeds()
 	if result.CurrentPage != 1 {
 		t.Errorf("Listing the feeds did not work properly")
 	}

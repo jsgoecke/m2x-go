@@ -54,7 +54,7 @@ type Feed struct {
 // Stream represents a tream
 type Stream struct {
 	Name    string      `json:"name"`
-	Value   string      `json:"value"`
+	Value   interface{} `json:"value"`
 	Min     interface{} `json:"min"`
 	Max     interface{} `json:"max"`
 	Unit    Unit        `json:"unit"`
