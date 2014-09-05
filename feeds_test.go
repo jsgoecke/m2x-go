@@ -4,6 +4,7 @@
 package m2x
 
 import (
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -185,6 +186,7 @@ func TestFeedLocation(t *testing.T) {
 	loc["longitude"] = "-57.5478776916862"
 	loc["elevation"] = "5"
 	errorMessage := client.UpdateFeedLocation(result.Feed, loc)
+	fmt.Println(errorMessage)
 	if errorMessage != nil {
 		t.Errorf("Did not update the location properly")
 	}
