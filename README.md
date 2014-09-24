@@ -136,7 +136,16 @@ Right now the tests are a combination of unit tests and functional tests. For th
 tests to run, you will need to set an environment variable 'M2X_API_KEY' with a valid key. Keep in mind that the tests will add and remove elements from your account, and if a tests fail may orphan
 the elements.
 
+	cd m2x-go
 	go test
+
+### Test Coverage
+
+[http://gocover.io/github.com/jsgoecke/m2x-go](http://gocover.io/github.com/jsgoecke/m2x-go)
+
+### Lint
+
+[http://go-lint.appspot.com/github.com/jsgoecke/m2x-go](http://go-lint.appspot.com/github.com/jsgoecke/m2x-go)
 
 ## Todo
 
